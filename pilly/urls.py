@@ -17,4 +17,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('product.urls')),
+    path('', include('payment.urls')),
 ]
