@@ -13,6 +13,11 @@ from pilly.settings   import (
     ALGORITHM
 )
 
+def LogInCheck(user, pwd):
+    if user and bcrypt.checkpw(pwd.encode('utf-8'), user.password.encode('utf-8')):
+        token = jwt.encode({'user': n.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
+        return JsonResponse({'token': token}, status=200)
+
 def validation_name(name):
     check = [bool(lambda name: re.search("[가-힣]+$", name))]
 
@@ -89,18 +94,14 @@ class SignInView(View):
             data = json.loads(request.body)
             email = data.get("email")
             contact = data.get("contact")
+            password = data.get("password")
 
             if email:
-                user_qs = User.objects.filter(email=email)
+                user_qs = User.objects.get(email=email)
+                return LogInCheck(user_qs, password)
             elif contact:
-                user_qs = User.objects.filter(contact=contact)
-                if user_qs.exists():
-                    user = User.objects.get(id = user_qs[0].id)
-                    if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-                        token       = jwt.encode({'user': user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
-                        return JsonResponse({'token': token}, status=200)
-                    return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
-                return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
+                user_qs = User.objects.get(contact=contact)
+                return LogInCheck(user_qs, password)
             return JsonResponse({'message': 'NOT_EXISTS'}, status=401)
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status= 401)

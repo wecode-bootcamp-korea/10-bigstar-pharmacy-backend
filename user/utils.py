@@ -23,7 +23,7 @@ class LoginConfirm:
             return JsonResponse({'message': 'EXPIRED_TOKEN'}, status=401)
 
         except jwt.DecodeError:
-            return JsonRespose({'message': 'INVALID_USER'}, status=401)
+            return JsonResponse({'message': 'INVALID_USER'}, status=401)
 
         except User.DoesNotExist:
             return JsonResponse({'message': 'INVALID_USER'}, status=401)
