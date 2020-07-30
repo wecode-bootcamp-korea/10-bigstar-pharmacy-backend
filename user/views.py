@@ -88,20 +88,19 @@ class SignInView(View):
         try:
             data = json.loads(request.body)
             email = data.get("email")
-            contact = data.get("context")
+            contact = data.get("contact")
 
             if email:
                 user_qs = User.objects.filter(email=email)
             elif contact:
                 user_qs = User.objects.filter(contact=contact)
-            return JsonResponse({'message': 'INVALID_INPUT'})
-            
-            if user_qs.exists():
-                user = user_qs[0]
-                if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-                    token       = jwt.encode({'user': user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
-                    return JsonResponse({'token': token}, status=200)
+                if user_qs.exists():
+                    user = User.objects.get(id = user_qs[0].id)
+                    if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
+                        token       = jwt.encode({'user': user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
+                        return JsonResponse({'token': token}, status=200)
+                    return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
                 return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
-            return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
+            return JsonResponse({'message': 'NOT_EXISTS'}, status=401)
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status= 401)
