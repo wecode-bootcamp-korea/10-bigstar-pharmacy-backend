@@ -1,9 +1,13 @@
-import json, jwt
+import json
+import jwt
 
 from django.http        import JsonResponse
 
 from .models            import User
-from pilly.settings     import SECRET_KEY, ALGORITHM
+from pilly.settings     import (
+    SECRET_KEY,
+    ALGORITHM
+)
 
 class LoginConfirm:
     def __init__(self, func):
