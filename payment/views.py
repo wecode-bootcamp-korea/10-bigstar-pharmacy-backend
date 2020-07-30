@@ -40,7 +40,7 @@ class PaymentTogo(View):
         prices        = '-'.join(price)
         print(cart_info, item)
         try:
-            if data['cardnkakao']=='credit':
+            if data['card_kakao']=='credit':
                 Payment(name     = data['name'],
                 contact          = data['contact'],
                 post_number      = data['post_number'],
@@ -60,10 +60,10 @@ class PaymentTogo(View):
                 points           = 0,
                 back_image       = rgbs,
                 pill_image       = imgs,
-                cardnkakao       = data['cardnkakao']
+                card_kakao       = data['card_kakao']
                 ).save()
                 
-            elif data['cardnkakao']=='kakao':
+            elif data['card_kakao']=='kakao':
                 Payment(name     = data['name'],
                 contact          = data['contact'],
                 post_number      = data['post_number'],
@@ -83,7 +83,7 @@ class PaymentTogo(View):
                 points           = 0,
                 back_image       = rgbs,
                 pill_image       = imgs,
-                cardnkakao       = data['cardnkakao']
+                card_kakao       = data['card_kakao']
                 ).save()
 
             cart_info.delete()
@@ -93,17 +93,14 @@ class PaymentTogo(View):
         except Exception as e:
             return JsonResponse({"message":f"{e}"})
 
-
-class MyPilly(View):
+class MyPillyView(View):
     @LoginConfirm
     def get(self, request):
         payment_info = Payment.objects.filter(user_id = request.user.id).select_related('user')
         data_set = []
         pilly_set = []
         for i in range(len(payment_info)):
-            #dd = payment_info[i].id
             result = Payment.objects.get(id=payment_info[i].id)
-            #print(result.id)
 
             items          = result.purchased_item.split(',')
             counts         = result.count.split(',')
@@ -124,10 +121,8 @@ class MyPilly(View):
                     'count'            : counts[i],
                     'back_image'       : back_img[0],
                     'pill_image'       : img[i],
-                                #'total_price':total_price
                                 })
                     data_set.append(mypilly)
-                    #print(f'{i}',data_set)
 
                 pilly= ({f'order_info' : data_set,
                 'user_name'            : user_name,
@@ -143,12 +138,4 @@ class MyPilly(View):
                              'user_name':request.user.name,
                              'email':request.user.email,
                              'contact':request.user.mobile_number})
-
-
-
-
-
-
-
-
 
