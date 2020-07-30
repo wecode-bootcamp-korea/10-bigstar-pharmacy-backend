@@ -17,4 +17,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('cart.urls')),
+    path('user', include('user.urls')),
+    path('survey', include('survey.urls'))
 ]
