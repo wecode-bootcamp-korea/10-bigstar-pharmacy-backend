@@ -5,12 +5,6 @@ import json
 class UserTest(TestCase):
     def setUp(self):
         client = Client()
-        """ User.objects.create(
-            name = '민호님',
-            email = 'geg@gmail.com',
-            contact = '01012341234',
-            password = bcrypt.hashpw('12345'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        ) """
     
     def tearDown(self):
         User.objects.all().delete()

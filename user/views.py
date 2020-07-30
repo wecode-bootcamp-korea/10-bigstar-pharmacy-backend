@@ -87,22 +87,21 @@ class SignInView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
-            if User.objects.filter(email = data['email']).exists():
-                user = User.objects.filter(email = data['email'])
-                if bcrypt.checkpw(data['password'].encode('utf-8'), user[0].password.encode('utf-8')):
-                    access_user = User.objects.get(email = data['email'])
-                    token       = jwt.encode({'user': access_user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
+            email = data.get("email")
+            contact = data.get("context")
+
+            if email:
+                user_qs = User.objects.filter(email=email)
+            elif contact:
+                user_qs = User.objects.filter(contact=contact)
+            return JsonResponse({'message': 'INVALID_INPUT'})
+            
+            if user_qs.exists():
+                user = user_qs[0]
+                if bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
+                    token       = jwt.encode({'user': user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
                     return JsonResponse({'token': token}, status=200)
                 return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
-            elif User.objects.filter(contact = data['contact']).exists():
-                user = User.objects.filter(contact = data['contact'])
-                if bcrypt.checkpw(data['password'].encode('utf-8'), user[0].password.encode('utf-8')):
-                    access_user = User.objects.get(contact = data['contact'])
-                    token       = jwt.encode({'user': access_user.id}, SECRET_KEY, ALGORITHM).decode('utf-8')
-                    return JsonResponse({'token': token}, status=200)
-                return JsonResponse({'message': 'INVLID_INPUT'}, status=401)
-            return JsonResponse({'message': 'INVLID_INPUT'}, status=401)
+            return JsonResponse({'message': 'INVALID_INPUT'}, status=401)
         except KeyError:
-            return JsonResponse({'message': 'KEY_ERROR'}, status=401)
-
-
+            return JsonResponse({'message': 'KEY_ERROR'}, status= 401)
