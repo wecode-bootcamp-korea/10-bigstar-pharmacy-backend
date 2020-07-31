@@ -26,68 +26,66 @@ class PaymentTogo(View):
         data          = json.loads(request.body)
         personal_info = User.objects.get(id = request.user.id)
         cart_info     = Cart.objects.filter(user_id = request.user.id)
-        print(personal_info.email)
-        print(cart_info)
-        item = [data['products'][i]['name'] for i in range(len(cart_info))]
-        items = ','.join(item)
-        rgb = [data['products'][i]['backgroundColor'] for i in range(len(cart_info))]
-        rgbs = '-'.join(rgb)
-        img = [data['products'][i]['imgUrl'] for i in range(len(cart_info))]
-        imgs = ','.join(img)
-        count = [data['products'][i]['ea'] for i in range(len(cart_info))]
+        item          = [data['products'][i]['name'] for i in range(len(cart_info))]
+        items         = ','.join(item)
+        rgb           = [data['products'][i]['backgroundColor'] for i in range(len(cart_info))]
+        rgbs          = '-'.join(rgb)
+        img           = [data['products'][i]['imgUrl'] for i in range(len(cart_info))]
+        imgs          = ','.join(img)
+        count         = [data['products'][i]['ea'] for i in range(len(cart_info))]
         counts        = ','.join(count)
         price         = [data['products'][i]['price'] for i in range(len(cart_info))]
         prices        = '-'.join(price)
-        print(cart_info, item)
         try:
             if data['card_kakao']=='credit':
-                Payment(name     = data['name'],
-                contact          = data['contact'],
-                post_number      = data['post_number'],
-                address_street   = data['address_street'],
-                address_detail   = data['address_detail'],
-                customer_request = data['customer_request'],
-                card_number      = data['card_number'],
-                expired_month    = data['expired_month'],
-                expired_year     = data['expired_year'],
-                birth            = data['birth'],
-                card_password    = data['card_password'],
-                user_id          = personal_info.id,
-                purchased_item   = items,
-                price            = prices,
-                count            = counts,
-                total_price      = data['totalPrice'],
-                points           = 0,
-                back_image       = rgbs,
-                pill_image       = imgs,
-                card_kakao       = data['card_kakao']
+                Payment(
+                    name             = data['name'],
+                    contact          = data['contact'],
+                    post_number      = data['post_number'],
+                    address_street   = data['address_street'],
+                    address_detail   = data['address_detail'],
+                    customer_request = data['customer_request'],
+                    card_number      = data['card_number'],
+                    expired_month    = data['expired_month'],
+                    expired_year     = data['expired_year'],
+                    birth            = data['birth'],
+                    card_password    = data['card_password'],
+                    user_id          = personal_info.id,
+                    purchased_item   = items,
+                    price            = prices,
+                    count            = counts,
+                    total_price      = data['totalPrice'],
+                    points           = 0,
+                    back_image       = rgbs,
+                    pill_image       = imgs,
+                    card_kakao       = data['card_kakao']
                 ).save()
                 
             elif data['card_kakao']=='kakao':
-                Payment(name     = data['name'],
-                contact          = data['contact'],
-                post_number      = data['post_number'],
-                address_street   = data['address_street'],
-                address_detail   = data['address_detail'],
-                customer_request = data['customer_request'],
-                card_number      = data['card_number'],
-                expired_month    = data['expired_month'],
-                expired_year     = data['expired_year'],
-                birth            = data['birth'],
-                card_password    = data['card_password'],
-                user_id          = personal_info.id,
-                purchased_item   = items,
-                price            = prices,
-                count            = counts,
-                total_price      = data['totalPrice'],
-                points           = 0,
-                back_image       = rgbs,
-                pill_image       = imgs,
-                card_kakao       = data['card_kakao']
+                Payment(
+                    name     = data['name'],
+                    contact          = data['contact'],
+                    post_number      = data['post_number'],
+                    address_street   = data['address_street'],
+                    address_detail   = data['address_detail'],
+                    customer_request = data['customer_request'],
+                    card_number      = data['card_number'],
+                    expired_month    = data['expired_month'],
+                    expired_year     = data['expired_year'],
+                    birth            = data['birth'],
+                    card_password    = data['card_password'],
+                    user_id          = personal_info.id,
+                    purchased_item   = items,
+                    price            = prices,
+                    count            = counts,
+                    total_price      = data['totalPrice'],
+                    points           = 0,
+                    back_image       = rgbs,
+                    pill_image       = imgs,
+                    card_kakao       = data['card_kakao']
                 ).save()
 
             cart_info.delete()
-            print(cart_info)
             return JsonResponse({'message':'Thanks for giving us great opportunity to share pilly life. Be healty!'})
         
         except Exception as e:
@@ -136,6 +134,6 @@ class MyPillyView(View):
 
         return JsonResponse({'item_info':pilly_set,
                              'user_name':request.user.name,
-                             'email':request.user.email,
-                             'contact':request.user.mobile_number})
+                             'email'    :request.user.email,
+                             'contact'  :request.user.mobile_number})
 
