@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'product',
     'review'
+    'payment',
     'cart'
     'user',
     'survey',
